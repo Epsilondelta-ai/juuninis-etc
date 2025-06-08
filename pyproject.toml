@@ -1,5 +1,5 @@
 [project]
-name = "juuninis-etc"
+name = "juuninis_etc"
 version = "0.0.1"
 description = ""
 authors = [
@@ -7,17 +7,16 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.13"
-dependencies = [
-    "fastapi (>=0.115.12,<0.116.0)",
-    "uvicorn (>=0.34.3,<0.35.0)",
-    "python-dotenv (>=1.1.0,<2.0.0)",
+requires-python = ">=3.9,<4.0"
+dependencies = ["langchain-core (>=0.3.64,<0.4.0)", "langchain-google-genai (>=2.1.5,<3.0.0)", "python-dotenv (>=1.1.0,<2.0.0)", "fastapi (>=0.115.12,<0.116.0)", "uvicorn[standard] (>=0.34.3,<0.35.0)"]
+packages = [
+    { include = "juuninis_etc", from = "./src" },
+    { include = "youtube_summarizer", from = "./youtube_summarizer" }
 ]
 
+[tool.poetry.scripts]
+youtube-summarizer = "youtube_summarizer.__main__:main"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.dependencies]
-python = ">=3.13, <4.0"
