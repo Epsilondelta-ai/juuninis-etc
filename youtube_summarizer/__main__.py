@@ -18,18 +18,29 @@ async def summarize(request: Request):
     youtube_url = data.get("youtube_url")
     llm_provider = data.get("llm_provider")
     llm_model = data.get("llm_model")
+    thinking_budget = data.get("thinking_budget", 100)
 
-    return {"summary": youtube_summarize(youtube_url, llm_provider, llm_model)}
+    return {
+        "summary": youtube_summarize(
+            youtube_url, llm_provider, llm_model, thinking_budget
+        )
+    }
 
 
 def youtube_summarize(
     youtube_url: str,
     llm_provider: str = "google",
     llm_model: str = "gemini-2.5-pro-preview-06-05",
+    thinking_budget: int = 100,
 ) -> str:
     llm_api_key = get_api_key(provider=llm_provider)
 
     llm = get_llm(provider=llm_provider, model=llm_model, api_key=llm_api_key)
+
+    generation_config = None
+
+    if thinking_budget > 0:
+        generation_config = dict(thinking_config={"thinking_budget": thinking_budget})
 
     response = llm.invoke(
         input=[
@@ -44,7 +55,7 @@ def youtube_summarize(
                 ],
             ),
         ],
-        generation_config=dict(thinking_config={"thinking_budget": 100}),
+        generation_config=generation_config,
     )
 
     return response.content
